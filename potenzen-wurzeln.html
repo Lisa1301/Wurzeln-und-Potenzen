@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Potenzen und Wurzeln – Klasse 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --ink:    #1a1f3c;
+  --rule:   #3b4a8a;
+  --accent: #c8441a;
+  --gold:   #b8860b;
+  --paper:  #fafaf7;
+  --grid:   #e8e5d8;
+  --muted:  #7a7a6e;
+  --green:  #1e7e4a;
+  --green-bg: #edf7f1;
+  --red-bg: #fdecea;
+  --r: 4px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Lato',sans-serif;
+  font-weight:300;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+}
+
+/* Grid background */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;
+  opacity:0.55;
+  pointer-events:none;
+  z-index:0;
+}
+
+header{
+  position:relative;
+  z-index:1;
+  background:var(--ink);
+  padding:40px 24px 32px;
+  text-align:center;
+  border-bottom:4px solid var(--rule);
+}
+
+header .eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#a8b8e8;
+  margin-bottom:12px;
+}
+
+header h1{
+  font-family:'DM Serif Display',serif;
+  font-weight:400;
+  font-size:2.6em;
+  color:#fff;
+  line-height:1.1;
+}
+
+header h1 em{
+  font-style:italic;
+  color:#a8b8e8;
+}
+
+header .sub{
+  margin-top:10px;
+  font-size:0.95em;
+  font-weight:300;
+  color:rgba(255,255,255,.55);
+  letter-spacing:.03em;
+}
+
+.formula-strip{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+.formula-strip span{
+  font-family:'JetBrains Mono',monospace;
+  font-size:16px;
+  font-weight:500;
+  color:#a8b8e8;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(168,184,232,.3);
+  padding:6px 14px;
+  border-radius:var(--r);
+}
+
+/* Container */
+.container{
+  position:relative;
+  z-index:1;
+  width:95%;
+  max-width:880px;
+  margin:0 auto;
+  padding:32px 0 60px;
+}
+
+/* Boxes */
+.box{
+  background:#fff;
+  border-radius:var(--r);
+  border:1px solid var(--grid);
+  padding:24px 28px;
+  margin-top:20px;
+  position:relative;
+}
+
+.box.story  { border-left:4px solid var(--rule); }
+.box.rule   { border-left:4px solid var(--green); }
+.box.task   { border-left:4px solid var(--gold); }
+.box.reflect{ border-left:4px solid var(--rule); }
+.box.success{ border-left:4px solid var(--green); }
+
+/* Box headings */
+.box-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+.box h2{
+  font-family:'DM Serif Display',serif;
+  font-weight:400;
+  font-size:1.5em;
+  color:var(--ink);
+  margin-bottom:14px;
+}
+
+/* Funfact */
+.funfact{
+  background:var(--paper);
+  border:1.5px dashed var(--rule);
+  border-radius:var(--r);
+  padding:12px 16px;
+  margin-top:14px;
+  font-size:.93em;
+  color:var(--muted);
+}
+
+.funfact b{
+  font-weight:700;
+  color:var(--rule);
+  display:block;
+  margin-bottom:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.88em;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+/* Rule box (dark) */
+.rule-highlight{
+  background:var(--ink);
+  color:#fff;
+  border-radius:var(--r);
+  padding:16px 20px;
+  margin:16px 0;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.rule-highlight .formula{
+  font-family:'DM Serif Display',serif;
+  font-style:italic;
+  font-size:2em;
+  color:#a8b8e8;
+  flex-shrink:0;
+}
+
+.rule-highlight p{
+  font-size:.93em;
+  line-height:1.6;
+  color:rgba(255,255,255,.7);
+  font-weight:300;
+}
+
+.rule-highlight p strong{
+  color:#fff;
+  font-weight:700;
+}
+
+/* Task number badge */
+.task-badge{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  background:#fdf6e3;
+  color:var(--gold);
+  border:1px solid #e8ddb0;
+  padding:3px 10px;
+  border-radius:var(--r);
+  margin-bottom:12px;
+}
+
+.box p, .box li{
+  font-size:1em;
+  line-height:1.7;
+  color:#333;
+  font-weight:300;
+}
+
+.box ul{
+  padding-left:1.4em;
+  margin:10px 0;
+}
+
+.box ul li{
+  margin-bottom:6px;
+}
+
+.formula-line{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.2em;
+  font-weight:500;
+  color:var(--rule);
+  text-align:center;
+  margin:14px 0;
+  padding:10px;
+  background:var(--paper);
+  border-radius:var(--r);
+  border:1px solid var(--grid);
+}
+
+/* Inputs */
+input[type=text]{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1em;
+  padding:10px 14px;
+  border:1.5px solid var(--grid);
+  border-radius:var(--r);
+  width:140px;
+  margin-top:10px;
+  color:var(--ink);
+  background:#fff;
+  transition:border-color .2s;
+}
+
+input[type=text]:focus{
+  outline:none;
+  border-color:var(--rule);
+}
+
+textarea{
+  font-family:'Lato',sans-serif;
+  font-size:.95em;
+  padding:12px 14px;
+  border:1.5px solid var(--grid);
+  border-radius:var(--r);
+  width:100%;
+  min-height:90px;
+  margin-top:10px;
+  color:var(--ink);
+  background:#fff;
+  resize:vertical;
+  transition:border-color .2s;
+}
+
+textarea:focus{
+  outline:none;
+  border-color:var(--rule);
+}
+
+/* Buttons */
+.btn{
+  display:inline-block;
+  font-family:'Lato',sans-serif;
+  font-size:.88em;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  background:var(--rule);
+  color:#fff;
+  border:none;
+  padding:10px 20px;
+  border-radius:var(--r);
+  cursor:pointer;
+  margin-top:12px;
+  box-shadow:2px 2px 0 var(--ink);
+  transition:transform .1s,box-shadow .1s;
+}
+
+.btn:hover{background:#2e3d7a;}
+
+.btn:active{
+  transform:translate(2px,2px);
+  box-shadow:none;
+}
+
+.btn-ghost{
+  background:#fff;
+  color:var(--rule);
+  border:1.5px solid var(--rule);
+  box-shadow:2px 2px 0 var(--grid);
+}
+
+.btn-ghost:hover{background:var(--paper);}
+
+/* Feedback */
+.feedback{
+  margin-top:10px;
+  font-size:.93em;
+  font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+  min-height:22px;
+}
+
+.correct{color:var(--green);}
+.wrong  {color:var(--accent);}
+
+/* Extra hint */
+.extra-hint{
+  display:none;
+  margin-top:12px;
+}
+
+.extra-hint .funfact{border-color:var(--accent);}
+.extra-hint .funfact b{color:var(--accent);}
+
+/* Progress bar */
+.progress-wrap{
+  margin-top:16px;
+  background:var(--grid);
+  border-radius:20px;
+  height:10px;
+  overflow:hidden;
+}
+
+.progress-inner{
+  height:100%;
+  width:0%;
+  background:var(--green);
+  border-radius:20px;
+  transition:width .4s ease;
+}
+
+.progress-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:6px;
+  letter-spacing:.06em;
+}
+
+/* Checklist */
+.checklist{list-style:none;padding:0;}
+
+.checklist li{
+  padding:6px 0 6px 28px;
+  position:relative;
+  border-bottom:.5px solid var(--grid);
+  font-size:.95em;
+  color:#333;
+}
+
+.checklist li:last-child{border-bottom:none;}
+
+.checklist li::before{
+  content:'✓';
+  position:absolute;
+  left:0;
+  color:var(--green);
+  font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.hidden{display:none;}
+
+.score-tag{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.88em;
+  font-weight:500;
+  padding:4px 12px;
+  border-radius:var(--r);
+  margin-top:14px;
+}
+
+.score-high  {background:var(--green-bg);color:var(--green);border:1px solid #a8dfc0;}
+.score-mid   {background:#fdf6e3;color:var(--gold);border:1px solid #e8ddb0;}
+.score-low   {background:var(--red-bg);color:var(--accent);border:1px solid #f0c4bc;}
+
+hr.divider{border:none;border-top:1.5px solid var(--grid);margin:18px 0;}
+
+@media(max-width:600px){
+  header h1{font-size:1.9em;}
+  .box{padding:18px 16px;}
+  input[type=text]{width:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="eyebrow">Klasse 9 · Mathematik · Lernheft</div>
+  <h1>Potenzen und <em>Wurzeln</em></h1>
+  <p class="sub">Geschichte · Rechenregeln · Interaktive Aufgaben · Reflexion</p>
+  <div class="formula-strip">
+    <span>aⁿ = a · a · … · a</span>
+    <span>√x · √x = x</span>
+    <span>10² = 100</span>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- Einstieg -->
+<div class="box story">
+  <div class="box-label">Einstieg</div>
+  <h2>Die geheime Rechenakademie</h2>
+
+  <p>
+    Willkommen in der <strong>„Akademie der Zahlenmeister"</strong>!<br>
+    Schon vor über 4000 Jahren arbeiteten Mathematiker in Babylon und Ägypten mit Potenzen und Wurzeln.
+    Später untersuchten griechische Gelehrte Quadratzahlen und geometrische Muster systematisch.
+  </p>
+
+  <div class="funfact">
+    <b>Funfact</b>
+    Das Zeichen √ für Wurzeln wurde erst im 16. Jahrhundert verwendet.
+    Das Wort <em>Radix</em> bedeutet auf Latein „Wurzel".
+  </div>
+
+  <p style="margin-top:14px;">
+    Heute trainierst du wie ein echter Zahlenmeister:<br>
+    Muster erkennen · Regeln entdecken · Fehler finden · Aufgaben lösen · Wissen reflektieren
+  </p>
+</div>
+
+<!-- Regelbox -->
+<div class="box rule">
+  <div class="box-label">Regelentdeckung</div>
+  <h2>Was sind Potenzen und Wurzeln?</h2>
+
+  <p><strong>Beobachte die Beispiele:</strong></p>
+  <ul>
+    <li>2² = 4</li>
+    <li>2³ = 8</li>
+    <li>2⁴ = 16</li>
+  </ul>
+
+  <div class="rule-highlight">
+    <div class="formula">2³</div>
+    <p>Eine Potenz bedeutet <strong>wiederholte Multiplikation</strong>.<br>
+    2³ = 2 · 2 · 2 = 8<br>
+    Die kleine Zahl oben heißt <strong>Exponent</strong>.</p>
+  </div>
+
+  <hr class="divider">
+
+  <p><strong>Jetzt die Wurzeln:</strong></p>
+  <ul>
+    <li>√9 = 3</li>
+    <li>√16 = 4</li>
+    <li>√25 = 5</li>
+  </ul>
+
+  <div class="formula-line">√x = ? &nbsp;→&nbsp; ? · ? = x</div>
+
+  <p>Die Wurzel fragt: <strong>Welche Zahl, mit sich selbst multipliziert, ergibt die Zahl unter der Wurzel?</strong></p>
+
+  <div class="funfact">
+    <b>Historisches Wissen</b>
+    Schon indische Mathematiker des 5. Jahrhunderts nutzten Wurzelrechnungen – lange bevor Europa davon wusste.
+  </div>
+
+  <button class="btn" onclick="showTasks()">Aufgaben starten →</button>
+</div>
+
+<!-- Aufgaben -->
+<div id="tasks" class="hidden">
+
+  <!-- Aufgabe 1 -->
+  <div class="box task" id="task1-box">
+    <div class="task-badge">Aufgabe 1 · Leicht</div>
+    <p>Berechne:</p>
+    <div class="formula-line">3² = ?</div>
+    <input type="text" id="q1" placeholder="Antwort">
+    <br>
+    <button class="btn" onclick="checkAnswer('q1','9','f1',2)">Prüfen</button>
+    <div id="f1" class="feedback"></div>
+    <div id="extra1" class="extra-hint">
+      <div class="funfact"><b>Fehlertrainer</b>Eine Potenz bedeutet wiederholte Multiplikation: 3² = 3 · 3</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 2 -->
+  <div class="box task hidden" id="task2">
+    <div class="task-badge">Aufgabe 2 · Leicht</div>
+    <p>Berechne:</p>
+    <div class="formula-line">2⁵ = ?</div>
+    <input type="text" id="q2" placeholder="Antwort">
+    <br>
+    <button class="btn" onclick="checkAnswer('q2','32','f2',3)">Prüfen</button>
+    <div id="f2" class="feedback"></div>
+    <div id="extra2" class="extra-hint">
+      <div class="funfact"><b>Tipp</b>2⁵ bedeutet 2 · 2 · 2 · 2 · 2. Schritt für Schritt ausrechnen!</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 3 -->
+  <div class="box task hidden" id="task3">
+    <div class="task-badge">Aufgabe 3 · Leicht</div>
+    <p>Welche Zahl gehört in die Lücke?</p>
+    <div class="formula-line">5³ = 5 · ___ · 5</div>
+    <input type="text" id="q3" placeholder="Antwort">
+    <br>
+    <button class="btn" onclick="checkAnswer('q3','5','f3',4)">Prüfen</button>
+    <div id="f3" class="feedback"></div>
+    <div id="extra3" class="extra-hint">
+      <div class="funfact"><b>Tipp</b>Der Exponent 3 bedeutet: dreimal dieselbe Zahl multiplizieren.</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 4 -->
+  <div class="box task hidden" id="task4">
+    <div class="task-badge">Aufgabe 4 · Mittel</div>
+    <p>Berechne die Wurzel:</p>
+    <div class="formula-line">√49 = ?</div>
+    <input type="text" id="q4" placeholder="Antwort">
+    <br>
+    <button class="btn" onclick="checkAnswer('q4','7','f4',5)">Prüfen</button>
+    <div id="f4" class="feedback"></div>
+    <div id="extra4" class="extra-hint">
+      <div class="funfact"><b>Fehlertrainer</b>Suche die Zahl, die mit sich selbst multipliziert 49 ergibt.</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 5 -->
+  <div class="box task hidden" id="task5">
+    <div class="task-badge">Aufgabe 5 · Mittel · Fehlertext</div>
+    <p>Ist die Aussage richtig oder falsch?</p>
+    <div class="formula-line" style="color:var(--accent);">„4² = 8"</div>
+    <p>Schreibe <strong>richtig</strong> oder <strong>falsch</strong>:</p>
+    <input type="text" id="q5" placeholder="richtig / falsch">
+    <br>
+    <button class="btn" onclick="checkAnswerFlexible('q5',['falsch','nein','false'],'f5',6)">Prüfen</button>
+    <div id="f5" class="feedback"></div>
+    <div id="extra5" class="extra-hint">
+      <div class="funfact"><b>Erklärung</b>4² bedeutet 4 · 4 = 16, nicht 4 · 2 = 8.</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 6 -->
+  <div class="box task hidden" id="task6">
+    <div class="task-badge">Aufgabe 6 · Mittel · Begründen</div>
+    <p>Begründe schriftlich:</p>
+    <div class="formula-line">Warum ist √64 = 8 ?</div>
+    <textarea id="q6" placeholder="Deine Begründung …"></textarea>
+    <br>
+    <button class="btn" onclick="checkReason()">Prüfen</button>
+    <div id="f6" class="feedback"></div>
+  </div>
+
+  <!-- Aufgabe 7 -->
+  <div class="box task hidden" id="task7">
+    <div class="task-badge">Aufgabe 7 · Mittel · Transfer</div>
+    <p>
+      Ein Schachbrett hat 8 Reihen und 8 Spalten.<br>
+      Wie viele Felder hat es insgesamt?
+    </p>
+    <div class="funfact" style="margin-bottom:12px;">
+      <b>Tipp</b>Nutze eine Potenz zur Darstellung.
+    </div>
+    <input type="text" id="q7" placeholder="Antwort">
+    <br>
+    <button class="btn" onclick="checkAnswer('q7','64','f7',8)">Prüfen</button>
+    <div id="f7" class="feedback"></div>
+  </div>
+
+  <!-- Aufgabe 8 -->
+  <div class="box task hidden" id="task8">
+    <div class="task-badge">Aufgabe 8 · Mittel · Auswahl</div>
+    <p>Welche Aussage stimmt?</p>
+    <div class="formula-line">A) √36 = 18 &nbsp;&nbsp;&nbsp; B) √36 = 6</div>
+    <input type="text" id="q8" placeholder="A oder B">
+    <br>
+    <button class="btn" onclick="checkAnswerFlexible('q8',['b','6','b)'],'f8',9)">Prüfen</button>
+    <div id="f8" class="feedback"></div>
+  </div>
+
+  <!-- Aufgabe 9 -->
+  <div class="box task hidden" id="task9">
+    <div class="task-badge">Aufgabe 9 · Schwer</div>
+    <p>Berechne:</p>
+    <div class="formula-line">10² = ?</div>
+    <input type="text" id="q9" placeholder="Antwort">
+    <br>
+    <button class="btn" onclick="checkAnswer('q9','100','f9',10)">Prüfen</button>
+    <div id="f9" class="feedback"></div>
+  </div>
+
+  <!-- Aufgabe 10 -->
+  <div class="box task hidden" id="task10">
+    <div class="task-badge">Aufgabe 10 · Schwer · Experte</div>
+    <p>Expertenfrage:</p>
+    <div class="formula-line">Welche Zahl hat die Wurzel 12?</div>
+    <p style="font-size:.88em;color:var(--muted);">Gesucht ist x, sodass √x = 12.</p>
+    <input type="text" id="q10" placeholder="Antwort">
+    <br>
+    <button class="btn" onclick="checkAnswer('q10','144','f10',11)">Prüfen</button>
+    <div id="f10" class="feedback"></div>
+  </div>
+
+  <!-- Reflexion -->
+  <div class="box reflect hidden" id="reflection">
+    <div class="box-label">Reflexion</div>
+    <h2>Was hast du gelernt?</h2>
+    <p>Beantworte die Fragen in eigenen Worten:</p>
+
+    <p style="margin-top:14px;font-weight:700;font-size:.93em;">Was habe ich heute gelernt?</p>
+    <textarea placeholder="Eigene Antwort …"></textarea>
+
+    <p style="margin-top:14px;font-weight:700;font-size:.93em;">Welche Aufgabe war schwierig?</p>
+    <textarea placeholder="Eigene Antwort …"></textarea>
+
+    <div class="funfact" style="margin-top:16px;">
+      <b>Denke nach</b>
+      Wann begegnen dir Potenzen und Wurzeln im Alltag?
+      (z. B. Technik, Computerspiele, Flächen, Wissenschaft)
+    </div>
+
+    <button class="btn" onclick="showSuccess()">Weiter →</button>
+  </div>
+
+  <!-- Erfolg -->
+  <div class="box success hidden" id="success">
+    <div class="box-label">Lernerfolg</div>
+    <h2>Kompetenzübersicht</h2>
+
+    <ul class="checklist">
+      <li>Potenzen verstehen und berechnen</li>
+      <li>Wurzeln verstehen und berechnen</li>
+      <li>Fehler in mathematischen Aussagen erkennen</li>
+      <li>Rechenregeln begründen</li>
+      <li>Mathematische Zusammenhänge entdecken</li>
+    </ul>
+
+    <p style="margin-top:18px;font-weight:700;font-size:.93em;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.06em;font-size:11px;text-transform:uppercase;">Fortschritt</p>
+    <div class="progress-wrap">
+      <div class="progress-inner" id="progressBar"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0 / 10 Aufgaben gelöst</div>
+
+    <div id="finalText"></div>
+
+    <br>
+    <button class="btn btn-ghost" onclick="resetAll()">↺ Zurücksetzen</button>
+  </div>
+
+</div><!-- /tasks -->
+
+</div><!-- /container -->
+
+<script>
+let solved = 0;
+
+function showTasks(){
+  document.getElementById("tasks").classList.remove("hidden");
+  document.getElementById("task1-box").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function increaseProgress(){
+  solved++;
+  let pct = Math.min((solved/10)*100,100);
+  document.getElementById("progressBar").style.width = pct+"%";
+  document.getElementById("progressLabel").textContent = solved+" / 10 Aufgaben gelöst";
+}
+
+function checkAnswer(inputId,correct,feedbackId,nextTask){
+  let val = document.getElementById(inputId).value.trim();
+  let fb  = document.getElementById(feedbackId);
+
+  if(val === correct){
+    fb.innerHTML = "✓ Richtig!";
+    fb.className = "feedback correct";
+    increaseProgress();
+    unlockNext(nextTask);
+  } else {
+    fb.innerHTML = "✗ Noch nicht richtig. Versuche es nochmal.";
+    fb.className = "feedback wrong";
+    let extra = document.getElementById("extra"+inputId.replace("q",""));
+    if(extra) extra.style.display="block";
+  }
+}
+
+function checkAnswerFlexible(inputId,answers,feedbackId,nextTask){
+  let val = document.getElementById(inputId).value.trim().toLowerCase();
+  let fb  = document.getElementById(feedbackId);
+
+  if(answers.includes(val)){
+    fb.innerHTML = "✓ Gut erkannt!";
+    fb.className = "feedback correct";
+    increaseProgress();
+    unlockNext(nextTask);
+  } else {
+    fb.innerHTML = "✗ Prüfe die Aussage noch einmal.";
+    fb.className = "feedback wrong";
+    let extra = document.getElementById("extra"+inputId.replace("q",""));
+    if(extra) extra.style.display="block";
+  }
+}
+
+function checkReason(){
+  let val = document.getElementById("q6").value.toLowerCase();
+  let fb  = document.getElementById("f6");
+
+  if(val.includes("8") && (val.includes("64") || val.includes("8·8") || val.includes("8*8") || val.includes("8 · 8") || val.includes("8x8"))){
+    fb.innerHTML = "✓ Gute Begründung!";
+    fb.className = "feedback correct";
+    increaseProgress();
+    unlockNext(7);
+  } else {
+    fb.innerHTML = "✗ Denke daran: Welche Zahl mal sich selbst ergibt 64?";
+    fb.className = "feedback wrong";
+  }
+}
+
+function unlockNext(nextTask){
+  if(nextTask <= 10){
+    let el = document.getElementById("task"+nextTask);
+    if(el){
+      el.classList.remove("hidden");
+      setTimeout(()=>el.scrollIntoView({behavior:"smooth",block:"start"}),200);
+    }
+  } else {
+    let ref = document.getElementById("reflection");
+    ref.classList.remove("hidden");
+    setTimeout(()=>ref.scrollIntoView({behavior:"smooth",block:"start"}),200);
+  }
+}
+
+function showSuccess(){
+  let s = document.getElementById("success");
+  s.classList.remove("hidden");
+
+  // update progress bar one last time
+  let pct = Math.min((solved/10)*100,100);
+  document.getElementById("progressBar").style.width = pct+"%";
+  document.getElementById("progressLabel").textContent = solved+" / 10 Aufgaben gelöst";
+
+  let ft = document.getElementById("finalText");
+  let tag = document.createElement("span");
+  tag.className = "score-tag";
+
+  if(solved >= 9){
+    tag.className += " score-high";
+    tag.textContent = "★ Sehr sicher – du beherrschst Potenzen und Wurzeln!";
+  } else if(solved >= 6){
+    tag.className += " score-mid";
+    tag.textContent = "✓ Gute Arbeit – einige Regeln noch weiter üben.";
+  } else {
+    tag.className += " score-low";
+    tag.textContent = "→ Guter Anfang – Übung hilft!";
+  }
+
+  ft.appendChild(tag);
+  setTimeout(()=>s.scrollIntoView({behavior:"smooth",block:"start"}),200);
+}
+
+function resetAll(){
+  location.reload();
+}
+</script>
+</body>
+</html>
